@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -20,9 +21,23 @@ func (a Games) Add(g Game) Games {
 	return a
 }
 
+func (a Games) AddBulk(gs []Game) Games {
+	a = append(a, gs[0:]...)
+	sort.Sort(Games(a))
+	return a
+}
+
 func (a Games) Remove(index int) Games {
 	if index < 0 || index >= len(a) {
 		return a
 	}
 	return append(a[:index], a[index+1:]...)
+}
+
+func (a Games) FromRecords(records [][]string) Games {
+	for _, r := range records {
+		fmt.Println(r)
+		a = a.Add(Game{Country: r[0], Name: r[1]})
+	}
+	return a
 }

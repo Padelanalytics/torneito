@@ -64,3 +64,20 @@ func TestRemove(t *testing.T) {
 	games = games.Remove(-1)
 	assert.Equal(t, 2, len(games))
 }
+func TestAddBulk(t *testing.T) {
+	games := Games{}
+	games = games.AddBulk(
+		[]Game{
+			{Name: "Berlin", Country: "GER"},
+			{Name: "Muenchen", Country: "GER"},
+			{Name: "Koeln", Country: "GER"},
+			{Name: "Madrid", Country: "SPAIN"},
+			{Name: "Barcelona", Country: "SPAIN"},
+		})
+	assert.Equal(t, 5, len(games))
+	assert.Equal(t, "Berlin", games[0].Name)
+	assert.Equal(t, "Koeln", games[1].Name)
+	assert.Equal(t, "Muenchen", games[2].Name)
+	assert.Equal(t, "Barcelona", games[3].Name)
+	assert.Equal(t, "Madrid", games[4].Name)
+}
