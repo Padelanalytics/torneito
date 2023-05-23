@@ -10,8 +10,8 @@ func AddGame() model.Game {
 	country := readCountry()
 	name := readName()
 
-	game := model.Game{Name: name, Country: country}
-	games = games.Add(game)
+	game := model.Game{Country: country, Name: name}
+	games.Add(game)
 
 	return game
 }

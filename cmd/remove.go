@@ -7,7 +7,7 @@ func RemoveGame() {
 	if index < 0 || index >= len(games) {
 		fmt.Println("Invalid index")
 	}
-	games = games.Remove(index)
+	games.Remove(index)
 }
 
 func readIndex() int {
