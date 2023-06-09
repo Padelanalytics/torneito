@@ -38,7 +38,7 @@ func (gs *Games) Remove(index int) {
 func (gs Games) FromRecords(records [][]string) Games {
 	for _, r := range records {
 		fmt.Println(r)
-		gs.Add(Game{Country: r[0], Name: r[1]})
+		gs.Add(Game{Country: r[0], Name: r[1], Date: r[4]})
 	}
 	return gs
 }
