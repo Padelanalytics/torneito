@@ -1,24 +1,23 @@
 package model
 
+import (
+	"strings"
+)
+
 type Game struct {
 	Country string
 	Name    string
+	Date    string
+}
+
+func (a Game) getTournament() Tournament {
+	return Tournament{Country: a.Country, Name: a.Name}
 }
 
 func (a Game) Compare(b Game) int {
-	// equals
-	if a.Country == b.Country &&
-		a.Name == b.Name {
-		return 0
+	r := a.getTournament().Compare(b.getTournament())
+	if r != 0 {
+		return r
 	}
-	// less than
-	if a.Country < b.Country {
-		return -1
-	}
-	if a.Country == b.Country &&
-		a.Name < b.Name {
-		return -1
-	}
-	// greater than
-	return +1
+	return strings.Compare(a.Date, b.Date)
 }
