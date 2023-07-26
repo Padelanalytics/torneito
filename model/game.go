@@ -26,7 +26,8 @@ func (a Game) Compare(b Game) int {
 		a.Serie == b.Serie &&
 		a.Division == b.Division &&
 		a.Category == b.Category &&
-		a.Round == b.Round {
+		a.Round == b.Round &&
+		a.Date == b.Date {
 		return 0
 	}
 	// less than
@@ -35,10 +36,11 @@ func (a Game) Compare(b Game) int {
 		a.Country == b.Country && a.Name == b.Name && a.Serie < b.Serie ||
 		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division < b.Division ||
 		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] < cCategory[b.Category] ||
-		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] < cCategory[b.Category] && cRound[a.Round] < cRound[b.Round] {
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] == cCategory[b.Category] && cRound[a.Round] < cRound[b.Round] ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] == cCategory[b.Category] && cRound[a.Round] == cRound[b.Round] && strings.Compare(a.Date, b.Date) < 0 {
 		return -1
 	}
-	return strings.Compare(a.Date, b.Date)
+	return 1
 }
 
 func (a Game) IsTournament(t Tournament) bool {
