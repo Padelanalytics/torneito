@@ -13,18 +13,22 @@ import (
 
 var csvFile string
 var games model.Games = model.Games{}
+var tournaments model.Tournaments = model.Tournaments{}
 
 var rootCmd = &cobra.Command{
 	Use:   "torneito",
 	Short: "Torneito is a very fast sport tournaments generator",
 	Long: `A fast and flexible sport tournament generator built with
-				  love by paconte and friends in Go.
-				  Complete documentation is available at https://gohugo.io/documentation/`,
+			love by paconte and friends in Go.
+			Complete documentation is available at https://github.com/paconte/torneito`,
 	Args: cobra.MatchAll(cobra.MaximumNArgs(0)),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("File to read: " + csvFile)
 		records := readCsvFile(csvFile)
 		games = games.FromRecords(records)
+		tournaments = tournaments.FromGames(games)
+		fmt.Println("Tournaments loaded: " + fmt.Sprintf("%d", len(tournaments)))
+		fmt.Println("Games loaded: " + fmt.Sprintf("%d", len(games)))
 		for {
 			selectAction()
 		}
@@ -45,7 +49,7 @@ func Execute() {
 func selectAction() {
 	prompt := promptui.Select{
 		Label: "Select action",
-		Items: []string{"Add", "Delete", "List", "Export", "Exit"},
+		Items: []string{"Add", "Delete", "List tournaments", "List games", "Export", "Exit"},
 	}
 	_, result, err := prompt.Run()
 
@@ -59,8 +63,10 @@ func selectAction() {
 		AddGame()
 	case "Delete":
 		RemoveGame()
-	case "List":
-		ListGames()
+	case "List tournaments":
+		ListTournaments()
+	case "List games":
+		ListTournamentGames()
 	case "Export":
 		AddGame()
 	case "Exit":

@@ -5,19 +5,47 @@ import (
 )
 
 type Game struct {
-	Country string
-	Name    string
-	Date    string
-}
-
-func (a Game) getTournament() Tournament {
-	return Tournament{Country: a.Country, Name: a.Name}
+	Country  string
+	Name     string
+	Serie    string
+	Division string
+	Date     string
+	Round    string
+	Category string
+	Teams    string
+	Players  []string
+	Sets     uint8
+	Local    []int8
+	Visitor  []int8
 }
 
 func (a Game) Compare(b Game) int {
-	r := a.getTournament().Compare(b.getTournament())
-	if r != 0 {
-		return r
+	// equals
+	if a.Country == b.Country &&
+		a.Name == b.Name &&
+		a.Serie == b.Serie &&
+		a.Division == b.Division &&
+		a.Category == b.Category &&
+		a.Round == b.Round &&
+		a.Date == b.Date {
+		return 0
 	}
-	return strings.Compare(a.Date, b.Date)
+	// less than
+	if a.Country < b.Country ||
+		a.Country == b.Country && a.Name < b.Name ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie < b.Serie ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division < b.Division ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] < cCategory[b.Category] ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] == cCategory[b.Category] && cRound[a.Round] < cRound[b.Round] ||
+		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] == cCategory[b.Category] && cRound[a.Round] == cRound[b.Round] && strings.Compare(a.Date, b.Date) < 0 {
+		return -1
+	}
+	return 1
+}
+
+func (a Game) IsTournament(t Tournament) bool {
+	return a.Country == t.Country &&
+		a.Name == t.Name &&
+		a.Serie == t.Serie &&
+		a.Division == t.Division
 }
