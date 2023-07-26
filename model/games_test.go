@@ -8,28 +8,28 @@ import (
 
 func TestAdd(t *testing.T) {
 	/*
-		games := Games{}
+	   games := Games{}
 
-			games.Add(Game{Name: "Berlin", Country: "GER"})
-			games.Add(Game{Name: "Muenchen", Country: "GER"})
-			assert.Equal(t, 2, len(games))
-			assert.Equal(t, "Berlin", games[0].Name)
-			assert.Equal(t, "Muenchen", games[1].Name)
+	   games.Add(Game{Name: "Berlin", Country: "GER"})
+	   games.Add(Game{Name: "Muenchen", Country: "GER"})
+	   assert.Equal(t, 2, len(games))
+	   assert.Equal(t, "Berlin", games[0].Name)
+	   assert.Equal(t, "Muenchen", games[1].Name)
 
-			games.Add(Game{Name: "Koeln", Country: "GER"})
-			assert.Equal(t, 3, len(games))
-			assert.Equal(t, "Berlin", games[0].Name)
-			assert.Equal(t, "Koeln", games[1].Name)
-			assert.Equal(t, "Muenchen", games[2].Name)
+	   games.Add(Game{Name: "Koeln", Country: "GER"})
+	   assert.Equal(t, 3, len(games))
+	   assert.Equal(t, "Berlin", games[0].Name)
+	   assert.Equal(t, "Koeln", games[1].Name)
+	   assert.Equal(t, "Muenchen", games[2].Name)
 
-			games.Add(Game{Name: "Madrid", Country: "SPAIN"})
-			assert.Equal(t, 4, len(games))
-			assert.Equal(t, "Madrid", games[3].Name)
+	   games.Add(Game{Name: "Madrid", Country: "SPAIN"})
+	   assert.Equal(t, 4, len(games))
+	   assert.Equal(t, "Madrid", games[3].Name)
 
-			games.Add(Game{Name: "Barcelona", Country: "SPAIN"})
-			assert.Equal(t, 5, len(games))
-			assert.Equal(t, "Barcelona", games[3].Name)
-			assert.Equal(t, "Madrid", games[4].Name)
+	   games.Add(Game{Name: "Barcelona", Country: "SPAIN"})
+	   assert.Equal(t, 5, len(games))
+	   assert.Equal(t, "Barcelona", games[3].Name)
+	   assert.Equal(t, "Madrid", games[4].Name)
 	*/
 }
 
