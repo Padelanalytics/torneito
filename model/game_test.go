@@ -20,3 +20,21 @@ func TestCompare(t *testing.T) {
 	assert.Equal(t, -1, g1.Compare(g4))
 	assert.Equal(t, -1, g1.Compare(g5))
 }
+
+func TestIsTournament(t *testing.T) {
+	game1 := Game{Country: "GERMANY", Name: "Berlin Open", Serie: "GPS-1000", Division: "MO", Date: date}
+	game2 := Game{Country: "GERMANY", Name: "Berlin Open", Serie: "GPS-1000", Division: "WO", Date: date}
+	game3 := Game{Country: "GERMANY", Name: "Berlin Open", Serie: "GPS-500", Division: "MO", Date: date}
+	game4 := Game{Country: "GERMANY", Name: "Berlin Open II", Serie: "GPS-1000", Division: "MO", Date: date}
+	game5 := Game{Country: "SPAIN", Name: "Berlin Open", Serie: "GPS-1000", Division: "MO", Date: date}
+	game6 := Game{Country: "GERMANY", Name: "Berlin Open", Serie: "GPS-1000", Division: "MO", Date: "20.10.2021"}
+
+	tournament := Tournament{Country: "GERMANY", Name: "Berlin Open", Serie: "GPS-1000", Division: "MO"}
+
+	assert.Equal(t, true, game1.IsTournament(tournament))
+	assert.Equal(t, false, game2.IsTournament(tournament))
+	assert.Equal(t, false, game3.IsTournament(tournament))
+	assert.Equal(t, false, game4.IsTournament(tournament))
+	assert.Equal(t, false, game5.IsTournament(tournament))
+	assert.Equal(t, true, game6.IsTournament(tournament))
+}
