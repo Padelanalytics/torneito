@@ -1,5 +1,9 @@
 package model
 
+import (
+	"strings"
+)
+
 type Game struct {
 	Country  string
 	Name     string
@@ -34,8 +38,7 @@ func (a Game) Compare(b Game) int {
 		a.Country == b.Country && a.Name == b.Name && a.Serie == b.Serie && a.Division == b.Division && cCategory[a.Category] < cCategory[b.Category] && cRound[a.Round] < cRound[b.Round] {
 		return -1
 	}
-	// greater than
-	return +1
+	return strings.Compare(a.Date, b.Date)
 }
 
 func (a Game) IsTournament(t Tournament) bool {
