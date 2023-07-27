@@ -30,7 +30,7 @@ var rootCmd = &cobra.Command{
 		fmt.Println("Tournaments loaded: " + fmt.Sprintf("%d", len(tournaments)))
 		fmt.Println("Games loaded: " + fmt.Sprintf("%d", len(games)))
 		for {
-			selectAction()
+			selectRootAction()
 		}
 	},
 }
@@ -46,10 +46,10 @@ func Execute() {
 	}
 }
 
-func selectAction() {
+func selectRootAction() {
 	prompt := promptui.Select{
 		Label: "Select action",
-		Items: []string{"Add", "Delete", "List tournaments", "List games", "Export", "Exit"},
+		Items: []string{"Add", "Edit", "Delete", "List tournaments", "List games", "Export", "Exit"},
 	}
 	_, result, err := prompt.Run()
 
@@ -63,6 +63,8 @@ func selectAction() {
 		AddGame()
 	case "Delete":
 		RemoveGame()
+	case "Edit":
+		EditGame()
 	case "List tournaments":
 		ListTournaments()
 	case "List games":
