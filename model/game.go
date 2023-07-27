@@ -12,11 +12,10 @@ type Game struct {
 	Date     string
 	Round    string
 	Category string
-	Teams    string
+	Teams    uint8
 	Players  []string
 	Sets     uint8
-	Local    []int8
-	Visitor  []int8
+	Scores   []int8
 }
 
 func (a Game) Compare(b Game) int {

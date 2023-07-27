@@ -27,11 +27,11 @@ func ListTournamentGames() {
 	}
 	for i, g := range games {
 		result := ""
-		for i, score := range g.Local {
-			if i < len(g.Local)-1 {
-				result = result + fmt.Sprintf("%d-%d / ", score, g.Visitor[i])
+		for i := 0; i < len(g.Scores); i = i + 2 {
+			if i < len(g.Scores)-2 {
+				result = result + fmt.Sprintf("%d-%d / ", g.Scores[i], g.Scores[i+1])
 			} else {
-				result = result + fmt.Sprintf("%d-%d", score, g.Visitor[i])
+				result = result + fmt.Sprintf("%d-%d", g.Scores[i], g.Scores[i+1])
 			}
 		}
 

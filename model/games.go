@@ -15,6 +15,24 @@ func (gs Games) Less(i, j int) bool {
 	return gs[i].Compare(gs[j]) < 0
 }
 
+func ScoresFromRecord(r []string, start int) []int8 {
+	scores := make([]int8, 0)
+	for i := start; i < len(r); i++ {
+		if r[i] == "" {
+			break
+		}
+		s, err := strconv.Atoi(r[i])
+		if err != nil {
+			panic(err)
+		}
+		scores = append(scores, int8(s))
+	}
+	if len(scores)%2 != 0 {
+		panic("Scores must be even")
+	}
+	return scores
+}
+
 func getResult(r []string, idx int) ([]int8, []int8) {
 	i := idx
 	j := 0
@@ -65,9 +83,17 @@ func (gs *Games) Remove(index int) {
 	*gs = append(copy[:index], copy[index+1:]...)
 }
 
+func (gs *Games) Update(index int, g Game) {
+	if index < 0 || index >= len(*gs) {
+		return
+	}
+	(*gs)[index] = g
+	sort.Sort(Games(*gs))
+}
+
 func (gs *Games) FromRecord(r []string) {
 	sets, _ := strconv.Atoi(r[cR["sets"]])
-	local, visitor := getResult(r, cR["sets"]+1)
+	teams, _ := strconv.Atoi(r[cR["teams"]])
 	g := Game{
 		Country:  r[cR["country"]],
 		Name:     r[cR["name"]],
@@ -76,11 +102,10 @@ func (gs *Games) FromRecord(r []string) {
 		Date:     r[cR["date"]],
 		Round:    r[cR["round"]],
 		Category: r[cR["category"]],
-		Teams:    r[cR["teams"]],
+		Teams:    uint8(teams),
 		Players:  []string{r[cR["p1_last"]], r[cR["p1_first"]], r[cR["p2_last"]], r[cR["p2_first"]], r[cR["p3_last"]], r[cR["p3_first"]], r[cR["p4_last"]], r[cR["p4_first"]]},
 		Sets:     uint8(sets),
-		Local:    local,
-		Visitor:  visitor,
+		Scores:   ScoresFromRecord(r, cR["sets"]+1),
 	}
 	copy := *gs
 	*gs = append(copy, g)
@@ -92,4 +117,52 @@ func (gs Games) FromRecords(records [][]string) Games {
 	}
 	sort.Sort(Games(gs))
 	return gs
+}
+
+func (gs Games) Dates() []string {
+	m := map[string]bool{}
+	for _, g := range gs {
+		m[g.Date] = true
+	}
+	return mapToList(m)
+}
+
+func (gs Games) Rounds() []string {
+	m := map[string]bool{}
+	for _, g := range gs {
+		m[g.Round] = true
+	}
+	return mapToList(m)
+}
+
+func (gs Games) Categories() []string {
+	m := map[string]bool{}
+	for _, g := range gs {
+		m[g.Category] = true
+	}
+	return mapToList(m)
+}
+
+func (gs Games) Lastnames() []string {
+	m := map[string]bool{}
+	for _, g := range gs {
+		for i, p := range g.Players {
+			if i%2 == 1 {
+				m[p] = true
+			}
+		}
+	}
+	return mapToList(m)
+}
+
+func (gs Games) Firstnames() []string {
+	m := map[string]bool{}
+	for _, g := range gs {
+		for i, p := range g.Players {
+			if i%2 != 0 {
+				m[p] = true
+			}
+		}
+	}
+	return mapToList(m)
 }
