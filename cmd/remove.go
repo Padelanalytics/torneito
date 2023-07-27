@@ -3,16 +3,20 @@ package cmd
 import "fmt"
 
 func RemoveGame() {
-	index := readIndex()
-	if index < 0 || index >= len(games) {
-		fmt.Println("Invalid index")
+	index, err := readIndex()
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
 	games.Remove(index)
 }
 
-func readIndex() int {
+func readIndex() (int, error) {
 	var index int
-	fmt.Print("Enter index: ")
+	fmt.Print("Enter game index: ")
 	fmt.Scanln(&index)
-	return index
+	if index < 0 || index >= len(games) {
+		return -1, fmt.Errorf("invalid game selection")
+	}
+	return index, nil
 }
