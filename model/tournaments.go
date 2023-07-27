@@ -36,7 +36,6 @@ func (ts *Tournaments) Remove(index int) {
 
 func (ts Tournaments) FromGame(g Game) Tournaments {
 	ts.Add(Tournament{g.Country, g.Name, g.Serie, g.Division})
-
 	return ts
 }
 
@@ -48,33 +47,41 @@ func (ts Tournaments) FromGames(games Games) Tournaments {
 }
 
 func (ts Tournaments) Names() []string {
-	ns := []string{}
+	ns := map[string]bool{}
 	for _, t := range ts {
-		ns = append(ns, t.Name)
+		ns[t.Name] = true
 	}
-	return ns
+	return mapToList(ns)
 }
 
 func (ts Tournaments) Countries() []string {
-	cs := []string{}
+	cs := map[string]bool{}
 	for _, t := range ts {
-		cs = append(cs, t.Country)
+		cs[t.Country] = true
 	}
-	return cs
+	return mapToList(cs)
 }
 
 func (ts Tournaments) Series() []string {
-	ss := []string{}
+	ss := map[string]bool{}
 	for _, t := range ts {
-		ss = append(ss, t.Serie)
+		ss[t.Serie] = true
 	}
-	return ss
+	return mapToList(ss)
 }
 
 func (ts Tournaments) Divisions() []string {
-	ds := []string{}
+	ds := map[string]bool{}
 	for _, t := range ts {
-		ds = append(ds, t.Division)
+		ds[t.Division] = true
 	}
-	return ds
+	return mapToList(ds)
+}
+
+func mapToList(m map[string]bool) []string {
+	l := []string{}
+	for k := range m {
+		l = append(l, k)
+	}
+	return l
 }
