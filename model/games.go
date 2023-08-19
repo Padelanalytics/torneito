@@ -5,12 +5,16 @@ import (
 	"strconv"
 )
 
+// Games is a collections of games and methods to manipulate the collection
 type Games []Game
 
+// Len returns the number of games
 func (gs Games) Len() int { return len(gs) }
 
+// Swap swaps two games
 func (gs Games) Swap(i, j int) { gs[i], gs[j] = gs[j], gs[i] }
 
+// Less returns true if game i is less than game j
 func (gs Games) Less(i, j int) bool {
 	return gs[i].Compare(gs[j]) < 0
 }
@@ -63,18 +67,21 @@ func getResult(r []string, idx int) ([]int8, []int8) {
 	return local, visitor
 }
 
+// Add adds a game to the collection
 func (gs *Games) Add(g Game) {
 	copy := *gs
 	*gs = append(copy, g)
 	sort.Sort(Games(*gs))
 }
 
+// AddBulk adds a collection of games to the collection
 func (gs *Games) AddBulk(games []Game) {
 	copy := *gs
 	*gs = append(copy, games[0:]...)
 	sort.Sort(Games(*gs))
 }
 
+// Remove removes a game from the collection
 func (gs *Games) Remove(index int) {
 	if index < 0 || index >= len(*gs) {
 		return
@@ -83,6 +90,7 @@ func (gs *Games) Remove(index int) {
 	*gs = append(copy[:index], copy[index+1:]...)
 }
 
+// Update updates a game in the collection
 func (gs *Games) Update(index int, g Game) {
 	if index < 0 || index >= len(*gs) {
 		return
@@ -91,6 +99,7 @@ func (gs *Games) Update(index int, g Game) {
 	sort.Sort(Games(*gs))
 }
 
+// FromRecord reads a csv record and creates a game
 func (gs *Games) FromRecord(r []string) {
 	sets, _ := strconv.Atoi(r[cR["sets"]])
 	teams, _ := strconv.Atoi(r[cR["teams"]])
@@ -111,6 +120,7 @@ func (gs *Games) FromRecord(r []string) {
 	*gs = append(copy, g)
 }
 
+// FromRecords reads a csv records and creates a collection of games wihout duplicates
 func (gs Games) FromRecords(records [][]string) Games {
 	for _, r := range records {
 		gs.FromRecord(r)
@@ -119,6 +129,7 @@ func (gs Games) FromRecords(records [][]string) Games {
 	return gs
 }
 
+// Dates returns a list without duplicates of all the available dates in Games
 func (gs Games) Dates() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
@@ -127,6 +138,7 @@ func (gs Games) Dates() []string {
 	return mapToList(m)
 }
 
+// Rounds returns a list without duplicates of all the rounds in Games
 func (gs Games) Rounds() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
@@ -135,6 +147,7 @@ func (gs Games) Rounds() []string {
 	return mapToList(m)
 }
 
+// Categories return a list without duplicates of all the categories in Games
 func (gs Games) Categories() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
@@ -143,6 +156,7 @@ func (gs Games) Categories() []string {
 	return mapToList(m)
 }
 
+// Lastnames returns a list without duplicates of all the countries in Games
 func (gs Games) Lastnames() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
@@ -155,6 +169,7 @@ func (gs Games) Lastnames() []string {
 	return mapToList(m)
 }
 
+// Firstnames returns a list without duplicates of all the last names in Games
 func (gs Games) Firstnames() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
