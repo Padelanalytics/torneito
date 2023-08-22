@@ -39,3 +39,55 @@ func TestGIsTournament(t *testing.T) {
 	assert.Equal(t, false, game5.IsTournament(tournament))
 	assert.Equal(t, true, game6.IsTournament(tournament))
 }
+
+var records = [][]string{
+	{"WPT", "Adeslas Madrid Open 2021 - Masculino", "WPT-OPEN", "MO", "11.04.2021", "", "", "KO32", "Preprevia", "2", "", "", "Valdés González", "Javier", "Vasquez", "Simon", "Bye", "Bye", "Bye", "Bye", "2", "6", "0", "6", "0"},
+	{"WPT", "Adeslas Madrid Open 2021 - Masculino", "WPT-OPEN", "MO", "11.04.2021", "", "", "KO32", "Preprevia", "2", "", "", "Cerezo Casado", "Mario", "Palasi Lozano", "Javier", "Solla", "David Antolín", "Prado Prego", "Manuel", "2", "7", "6", "7", "6"},
+	{"WPT", "Adeslas Madrid Open 2021 - Masculino", "WPT-OPEN", "MO", "11.04.2021", "", "", "KO32", "Preprevia", "2", "", "", "Knutsson", "Carl", "Windahl", "Daniel", "Medina Murphy", "Christian", "Gama González", "Juan Carlos", "2", "3", "6", "4", "6"},
+	{"WPT", "Adeslas Madrid Open 2021 - Masculino", "WPT-OPEN", "MO", "11.04.2021", "", "", "KO32", "Preprevia", "2", "", "", "Cremona", "Simone", "Cattaneo", "Daniele", "Muñoz Enrile", "Jaime", "García Mora", "Javier", "2", "4", "6", "4", "6"},
+	{"WPT", "Adeslas Madrid Open 2021 - Masculino", "WPT-OPEN", "MO", "11.04.2021", "", "", "KO32", "Preprevia", "2", "", "", "Muñoz Baixas", "Jordi", "Aliaga Cruz", "José", "Molina Domínguez", "Alberto", "Antonelly Carballo", "Ionjan", "2", "6", "3", "6", "4"},
+}
+
+func TestScoresFromRecord(t *testing.T) {
+	scores := m.ScoresFromRecord([]string{"6", "0", "6", "0"}, 0)
+	assert.Equal(t, []int8{6, 0, 6, 0}, scores)
+
+	scores = m.ScoresFromRecord([]string{"6", "0", "6", "0", "6", "0", "6", "0", "6", "0"}, 0)
+	assert.Equal(t, []int8{6, 0, 6, 0, 6, 0, 6, 0, 6, 0}, scores)
+
+	scores = m.ScoresFromRecord([]string{"6", "0", ""}, 0)
+	assert.Equal(t, []int8{6, 0}, scores)
+}
+
+func TestScoresFromRecordPanicOdd(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+	m.ScoresFromRecord([]string{"6", "0", "6"}, 0)
+}
+
+func TestScoresFromRecordPanicAtoi(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+	m.ScoresFromRecord([]string{"6", "0", "a", "0"}, 0)
+}
+
+func TestToRecords(t *testing.T) {
+	games := []m.Game{}
+	newRecords := make([][]string, len(records))
+	for _, r := range records {
+		games = append(games, m.NewFromRecord(r))
+	}
+	assert.Equal(t, len(records), len(games))
+
+	for i, g := range games {
+		newRecords[i] = g.ToRecord()
+	}
+	assert.Equal(t, len(records), len(newRecords))
+	assert.Equal(t, records, newRecords)
+}

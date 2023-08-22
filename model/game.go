@@ -21,6 +21,8 @@ type Game struct {
 }
 
 // Compare returns -1 if g is less than other, 0 if equals and +1 if greater than other
+// The order is: Country, Name, Serie, Division, Category, Round, Date
+// Players and Scores are not compared
 func (g Game) Compare(other Game) int {
 	// equals
 	if g.Country == other.Country &&
@@ -101,4 +103,9 @@ func (g Game) ToRecord() []string {
 	}
 	r = append(r, ScoresToRecord(g.Scores)...)
 	return r
+}
+
+// Tournament returns the tournament of the game
+func (g Game) Tournament() Tournament {
+	return Tournament{g.Country, g.Name, g.Serie, g.Division}
 }
