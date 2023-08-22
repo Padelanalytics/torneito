@@ -3,6 +3,8 @@ package model
 import (
 	"sort"
 	"strconv"
+
+	"golang.org/x/exp/slices"
 )
 
 // Games is a collections of games and methods to manipulate the collection
@@ -37,41 +39,21 @@ func ScoresFromRecord(r []string, start int) []int8 {
 	return scores
 }
 
-func getResult(r []string, idx int) ([]int8, []int8) {
-	i := idx
-	j := 0
-	local := make([]int8, 0)
-	visitor := make([]int8, 0)
-	var score string
-	for i < len(r) {
-		score = r[i]
-		if score == "" {
-			break
-		}
-		if i%2 == 0 { // visitor
-			s, err := strconv.Atoi(score)
-			if err != nil {
-				panic(err)
-			}
-			visitor = append(visitor, int8(s))
-		} else { // local
-			s, err := strconv.Atoi(score)
-			if err != nil {
-				panic(err)
-			}
-			local = append(local, int8(s))
-		}
-		j++
-		i = idx + j
+func ScoresToRecord(scores []int8) []string {
+	r := make([]string, len(scores))
+	for i, s := range scores {
+		r[i] = strconv.Itoa(int(s))
 	}
-	return local, visitor
+	return r
 }
 
-// Add adds a game to the collection
-func (gs *Games) Add(g Game) {
+// Add adds a game to the collection and sorts the collection if sorted is true
+func (gs *Games) Add(g Game, sorted bool) {
 	copy := *gs
 	*gs = append(copy, g)
-	sort.Sort(Games(*gs))
+	if sorted {
+		sort.Sort(Games(*gs))
+	}
 }
 
 // AddBulk adds a collection of games to the collection
@@ -81,52 +63,34 @@ func (gs *Games) AddBulk(games []Game) {
 	sort.Sort(Games(*gs))
 }
 
-// Remove removes a game from the collection
-func (gs *Games) Remove(index int) {
-	if index < 0 || index >= len(*gs) {
-		return
-	}
-	copy := *gs
-	*gs = append(copy[:index], copy[index+1:]...)
-}
-
 // Update updates a game in the collection
 func (gs *Games) Update(index int, g Game) {
-	if index < 0 || index >= len(*gs) {
+	if len(*gs) == 0 || index < 0 || index >= len(*gs) {
 		return
 	}
 	(*gs)[index] = g
 	sort.Sort(Games(*gs))
 }
 
-// FromRecord reads a csv record and creates a game
-func (gs *Games) FromRecord(r []string) {
-	sets, _ := strconv.Atoi(r[cR["sets"]])
-	teams, _ := strconv.Atoi(r[cR["teams"]])
-	g := Game{
-		Country:  r[cR["country"]],
-		Name:     r[cR["name"]],
-		Serie:    r[cR["serie"]],
-		Division: r[cR["division"]],
-		Date:     r[cR["date"]],
-		Round:    r[cR["round"]],
-		Category: r[cR["category"]],
-		Teams:    uint8(teams),
-		Players:  []string{r[cR["p1_last"]], r[cR["p1_first"]], r[cR["p2_last"]], r[cR["p2_first"]], r[cR["p3_last"]], r[cR["p3_first"]], r[cR["p4_last"]], r[cR["p4_first"]]},
-		Sets:     uint8(sets),
-		Scores:   ScoresFromRecord(r, cR["sets"]+1),
-	}
-	copy := *gs
-	*gs = append(copy, g)
-}
-
-// FromRecords reads a csv records and creates a collection of games wihout duplicates
-func (gs Games) FromRecords(records [][]string) Games {
+// AddFromRecords reads csv records and creates a collection of games wihout duplicates
+func (gs Games) AddFromRecords(records [][]string) Games {
 	for _, r := range records {
-		gs.FromRecord(r)
+		gs.Add(NewFromRecord(r), false)
 	}
 	sort.Sort(Games(gs))
 	return gs
+}
+
+// Tournaments returns a list of tournaments without duplicates
+func (gs Games) Tournaments() []Tournament {
+	ts := []Tournament{}
+	for _, g := range gs {
+		//if _, b := slices.BinarySearch(ts, g.Tournament()); !b {
+		if !slices.Contains(ts, g.Tournament()) {
+			ts = append(ts, g.Tournament())
+		}
+	}
+	return ts
 }
 
 // Dates returns a list without duplicates of all the available dates in Games
@@ -161,7 +125,7 @@ func (gs Games) Lastnames() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
 		for i, p := range g.Players {
-			if i%2 == 1 {
+			if i%2 == 0 {
 				m[p] = true
 			}
 		}
@@ -174,7 +138,7 @@ func (gs Games) Firstnames() []string {
 	m := map[string]bool{}
 	for _, g := range gs {
 		for i, p := range g.Players {
-			if i%2 != 0 {
+			if i%2 == 1 {
 				m[p] = true
 			}
 		}

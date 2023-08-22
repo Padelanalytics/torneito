@@ -11,10 +11,10 @@ import (
 
 func AddGame() model.Game {
 
-	country := read(tournaments.Countries(), "Enter country:")
-	name := read(tournaments.Names(), "Enter name:")
-	serie := read(tournaments.Series(), "Enter serie:")
-	division := read(tournaments.Divisions(), "Enter division:")
+	country := read(model.Countries(tournaments), "Enter country:")
+	name := read(model.Names(tournaments), "Enter name:")
+	serie := read(model.Series(tournaments), "Enter serie:")
+	division := read(model.Divisions(tournaments), "Enter division:")
 	date := read(games.Dates(), "Enter date:")
 	round := read(games.Rounds(), "Enter round:")
 	category := read(games.Categories(), "Enter category:")

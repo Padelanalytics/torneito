@@ -1,6 +1,9 @@
 package cmd
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 func RemoveGame() {
 	index, err := readIndex()
@@ -8,7 +11,7 @@ func RemoveGame() {
 		fmt.Println(err)
 		return
 	}
-	games.Remove(index)
+	games = slices.Delete(games, index, index)
 }
 
 func readIndex() (int, error) {

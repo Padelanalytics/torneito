@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"encoding/csv"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/manifoldco/promptui"
@@ -13,7 +11,7 @@ import (
 
 var csvFile string
 var games model.Games = model.Games{}
-var tournaments model.Tournaments = model.Tournaments{}
+var tournaments []model.Tournament = []model.Tournament{}
 
 var rootCmd = &cobra.Command{
 	Use:   "torneito",
@@ -24,9 +22,9 @@ var rootCmd = &cobra.Command{
 	Args: cobra.MatchAll(cobra.MaximumNArgs(0)),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("File to read: " + csvFile)
-		records := readCsvFile(csvFile)
-		games = games.FromRecords(records)
-		tournaments = tournaments.FromGames(games)
+		records := Import(csvFile)
+		games = games.AddFromRecords(records)
+		tournaments = games.Tournaments()
 		fmt.Println("Tournaments loaded: " + fmt.Sprintf("%d", len(tournaments)))
 		fmt.Println("Games loaded: " + fmt.Sprintf("%d", len(games)))
 		for {
@@ -70,27 +68,9 @@ func selectRootAction() {
 	case "List games":
 		ListTournamentGames()
 	case "Export":
-		AddGame()
+		Export()
 	case "Exit":
 		fmt.Println("Bye!")
 		os.Exit(1)
 	}
-}
-
-func readCsvFile(filePath string) [][]string {
-	f, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal("Unable to read input file "+filePath, err)
-	}
-	defer f.Close()
-
-	csvReader := csv.NewReader(f)
-	csvReader.Comma = ';'
-	csvReader.Comment = '#'
-	records, err := csvReader.ReadAll()
-	if err != nil {
-		log.Fatal("Unable to parse file as CSV for "+filePath, err)
-	}
-
-	return records
 }
