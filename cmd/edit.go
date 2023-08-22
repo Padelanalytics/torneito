@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/manifoldco/promptui"
+	"github.com/paconte/torneito/model"
 )
 
 func EditGame() {
@@ -31,16 +32,16 @@ func selectEditAction(index int) {
 
 	switch result {
 	case "Federation":
-		input := read(tournaments.Countries(), "Enter country:")
+		input := read(model.Countries(tournaments), "Enter country:")
 		game.Country = input
 	case "Name":
-		input := read(tournaments.Names(), "Enter name:")
+		input := read(model.Names(tournaments), "Enter name:")
 		game.Name = input
 	case "Serie":
-		input := read(tournaments.Series(), "Enter serie:")
+		input := read(model.Series(tournaments), "Enter serie:")
 		game.Serie = input
 	case "Division":
-		input := read(tournaments.Divisions(), "Enter division:")
+		input := read(model.Divisions(tournaments), "Enter division:")
 		game.Division = input
 	case "Date":
 		input := read(games.Dates(), "Enter date:")

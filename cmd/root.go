@@ -13,7 +13,7 @@ import (
 
 var csvFile string
 var games model.Games = model.Games{}
-var tournaments model.Tournaments = model.Tournaments{}
+var tournaments []model.Tournament = []model.Tournament{}
 
 var rootCmd = &cobra.Command{
 	Use:   "torneito",
@@ -25,8 +25,8 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("File to read: " + csvFile)
 		records := readCsvFile(csvFile)
-		games = games.FromRecords(records)
-		tournaments = tournaments.FromGames(games)
+		games = games.AddFromRecords(records)
+		tournaments = games.Tournaments()
 		fmt.Println("Tournaments loaded: " + fmt.Sprintf("%d", len(tournaments)))
 		fmt.Println("Games loaded: " + fmt.Sprintf("%d", len(games)))
 		for {
