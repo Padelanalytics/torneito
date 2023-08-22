@@ -1,8 +1,6 @@
 package model
 
 import (
-	"encoding/csv"
-	"os"
 	"sort"
 	"strconv"
 
@@ -146,23 +144,4 @@ func (gs Games) Firstnames() []string {
 		}
 	}
 	return mapToList(m)
-}
-
-func (gs Games) toCsv(f string) error {
-	file, err := os.Create(f)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-
-	for _, value := range gs {
-		if err := writer.Write(value.ToRecord()); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
