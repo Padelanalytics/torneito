@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -45,9 +46,59 @@ func (g Game) Compare(other Game) int {
 }
 
 // IsTournament returns true if the game is part of the tournament
-func (a Game) IsTournament(t Tournament) bool {
-	return a.Country == t.Country &&
-		a.Name == t.Name &&
-		a.Serie == t.Serie &&
-		a.Division == t.Division
+func (g Game) IsTournament(t Tournament) bool {
+	return g.Country == t.Country &&
+		g.Name == t.Name &&
+		g.Serie == t.Serie &&
+		g.Division == t.Division
+}
+
+// NewFromRecord creates a new Game from a csv line in this case a []string.
+// It is the opposite of ToRecord.
+func NewFromRecord(r []string) Game {
+	sets, _ := strconv.Atoi(r[cR["sets"]])
+	teams, _ := strconv.Atoi(r[cR["teams"]])
+	return Game{
+		Country:  r[cR["country"]],
+		Name:     r[cR["name"]],
+		Serie:    r[cR["serie"]],
+		Division: r[cR["division"]],
+		Date:     r[cR["date"]],
+		Round:    r[cR["round"]],
+		Category: r[cR["category"]],
+		Teams:    uint8(teams),
+		Players:  []string{r[cR["p1_last"]], r[cR["p1_first"]], r[cR["p2_last"]], r[cR["p2_first"]], r[cR["p3_last"]], r[cR["p3_first"]], r[cR["p4_last"]], r[cR["p4_first"]]},
+		Sets:     uint8(sets),
+		Scores:   ScoresFromRecord(r, cR["sets"]+1),
+	}
+}
+
+// ToRecord returns a csv line in this case a []string.
+// It is the opposite of NewFromRecord.
+func (g Game) ToRecord() []string {
+	r := []string{
+		g.Country,
+		g.Name,
+		g.Serie,
+		g.Division,
+		g.Date,
+		"",
+		"",
+		g.Round,
+		g.Category,
+		strconv.Itoa(int(g.Teams)),
+		"",
+		"",
+		g.Players[0],
+		g.Players[1],
+		g.Players[2],
+		g.Players[3],
+		g.Players[4],
+		g.Players[5],
+		g.Players[6],
+		g.Players[7],
+		strconv.Itoa(int(g.Sets)),
+	}
+	r = append(r, ScoresToRecord(g.Scores)...)
+	return r
 }
